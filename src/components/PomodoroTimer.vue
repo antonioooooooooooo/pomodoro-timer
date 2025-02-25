@@ -1,5 +1,34 @@
 <template>
   <div class="wrapper" :style="{ backgroundColor }">
+    <div
+      class="edit-length-wrapper"
+      :class="{ 'edit-length-wrapper-started': isStarted }"
+    >
+      <h2 class="edit-length-title">
+        Edit {{ mode === WORK ? "session" : "break" }} length:
+      </h2>
+      <div class="edit-length-inputs-wrapper">
+        <input
+          class="length-input"
+          type="number"
+          :disabled="isStarted"
+          v-model="minutes"
+          @input="handleLengthInput('minutes', $event)"
+        />
+        :
+        <input
+          class="length-input"
+          type="number"
+          :disabled="isStarted"
+          v-model="seconds"
+          @input="handleLengthInput('seconds', $event)"
+        />
+      </div>
+      <button
+        @click="remainingTime = parseInt(minutes) * 60 + parseInt(seconds)"
+        class="checkmark-button"
+      />
+    </div>
     <div class="timer">
       <div class="button-box">
         <button
@@ -8,6 +37,10 @@
           @click="
             mode = WORK;
             remainingTime = INITIAL_TIMES[WORK];
+            minutes = Math.floor(INITIAL_TIMES[WORK] / 60)
+              .toString()
+              .padStart(2, '0');
+            seconds = (INITIAL_TIMES[WORK] % 60).toString().padStart(2, '0');
           "
         >
           Work
@@ -18,6 +51,12 @@
           @click="
             mode = SHORT_BREAK;
             remainingTime = INITIAL_TIMES[SHORT_BREAK];
+            minutes = Math.floor(INITIAL_TIMES[SHORT_BREAK] / 60)
+              .toString()
+              .padStart(2, '0');
+            seconds = (INITIAL_TIMES[SHORT_BREAK] % 60)
+              .toString()
+              .padStart(2, '0');
           "
         >
           Short Break
@@ -28,6 +67,12 @@
           @click="
             mode = LONG_BREAK;
             remainingTime = INITIAL_TIMES[LONG_BREAK];
+            minutes = Math.floor(INITIAL_TIMES[LONG_BREAK] / 60)
+              .toString()
+              .padStart(2, '0');
+            seconds = (INITIAL_TIMES[LONG_BREAK] % 60)
+              .toString()
+              .padStart(2, '0');
           "
         >
           Long Break
@@ -53,6 +98,18 @@
           class="restart-button"
         />
       </div>
+    </div>
+    <div class="spotify-wrapper">
+      <iframe
+        style="border-radius: 12px"
+        src="https://open.spotify.com/embed/playlist/6X185BlQApNN7mjiFFhPdi?utm_source=generator&theme=0"
+        width="100%"
+        height="80"
+        frameBorder="0"
+        allowfullscreen=""
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"
+      />
     </div>
   </div>
 </template>
@@ -90,6 +147,10 @@ export default {
       isRunning: false,
       isStarted: false,
       timer: null,
+      minutes: Math.floor(INITIAL_TIMES[WORK] / 60)
+        .toString()
+        .padStart(2, "0"),
+      seconds: (INITIAL_TIMES[WORK] % 60).toString().padStart(2, "0"),
     };
   },
   computed: {
@@ -128,6 +189,21 @@ export default {
       this.remainingTime = INITIAL_TIMES[this.mode];
       this.isRunning = false;
       this.isStarted = false;
+    },
+    handleLengthInput(key, e) {
+      let value = e.target.value.replace(/^0+(\d)$/, "0$1");
+      let intValue = parseInt(value, 10);
+
+      if (isNaN(intValue)) {
+        this[key] = 0;
+        return;
+      }
+
+      this[key] = Math.min(59, Math.max(0, intValue))
+        .toString()
+        .padStart(2, "0");
+
+      e.target.value = this[key] < 10 ? `0${this[key]}` : this[key];
     },
   },
   created() {

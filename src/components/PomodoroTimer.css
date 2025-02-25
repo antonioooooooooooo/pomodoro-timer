@@ -83,3 +83,71 @@
 .restart-button:active {
   transform: translateY(2px);
 }
+
+.spotify-wrapper {
+  position: fixed;
+  bottom: 40px;
+  left: 40px;
+  width: 350px;
+}
+
+.edit-length-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.edit-length-wrapper-started {
+  opacity: 0.6;
+  user-select: none;
+  pointer-events: none;
+}
+
+.edit-length-title {
+  text-align: center;
+  margin: 0 0 20px;
+  font-size: 28px;
+  color: #fff;
+  font-weight: 500;
+}
+
+.edit-length-inputs-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.length-input {
+  height: 40px;
+  width: 40px;
+  text-align: center;
+  font-size: 24px;
+  border-radius: 6px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.length-input:focus {
+  outline: none;
+}
+
+.checkmark-button {
+  mask-image: url("https://i.imgur.com/cEhpy4R.png");
+  background-color: #fff;
+  mask-size: 30px;
+  height: 30px;
+  width: 30px;
+  border: none;
+  cursor: pointer;
+}
+
+.checkmark-button:active {
+  transform: translateY(2px);
+}
