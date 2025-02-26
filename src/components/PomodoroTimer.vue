@@ -165,16 +165,27 @@ export default {
         this.timer = null;
       } else {
         this.isStarted = true;
-        this.timer = setInterval(() => {
-          this.remainingTime--;
+        const startTime = Date.now();
+        const targetEndTime = startTime + this.remainingTime * 1000; // Calculate the exact target end time
 
-          if (this.remainingTime === -1) {
+        this.timer = setInterval(() => {
+          const now = Date.now();
+          this.remainingTime = Math.max(
+            0,
+            Math.round((targetEndTime - now) / 1000)
+          );
+
+          if (this.remainingTime === 0) {
+            clearInterval(this.timer);
+            this.timer = null;
+
             if (Notification.permission === "granted") {
               new Notification("Time's up!", {
                 body: MESSAGES[this.mode],
                 icon: "https://icons.iconarchive.com/icons/flat-icons.com/flat/256/Clock-icon.png",
               });
             }
+
             this.reset();
           }
         }, 1000);
